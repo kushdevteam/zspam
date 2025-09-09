@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Security Alert - Coinbase</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f8f9fa;
+            color: #333333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            background: linear-gradient(135deg, #1652f0, #0052ff);
+            padding: 30px 40px;
+            text-align: center;
+        }
+        .logo {
+            width: 40px;
+            height: 40px;
+            background-color: white;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            font-weight: bold;
+            color: #1652f0;
+            margin-bottom: 15px;
+        }
+        .header h1 {
+            color: white;
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        .content {
+            padding: 40px;
+        }
+        .alert-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 20px;
+            margin-bottom: 30px;
+        }
+        .alert-icon {
+            color: #f39c12;
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        .alert-text {
+            color: #856404;
+            font-weight: 600;
+            margin: 0;
+        }
+        .message {
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #1652f0, #0052ff);
+            color: white;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 16px;
+            margin: 20px 0;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(22, 82, 240, 0.3);
+        }
+        .security-tips {
+            background-color: #f8f9fa;
+            border-radius: 6px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        .footer {
+            background-color: #f8f9fa;
+            padding: 30px 40px;
+            text-align: center;
+            color: #666666;
+            font-size: 14px;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            margin: 0 10px;
+            color: #1652f0;
+            text-decoration: none;
+        }
+        .timestamp {
+            font-size: 12px;
+            color: #999999;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo">C</div>
+            <h1>Coinbase Security Alert</h1>
+        </div>
+
+        <div class="content">
+            <div class="alert-box">
+                <div class="alert-icon">⚠️</div>
+                <p class="alert-text">Unusual activity detected on your account</p>
+            </div>
+
+            <div class="message">
+                <p>Hello,</p>
+                
+                <p>We detected unusual sign-in activity on your Coinbase account from a new device or location:</p>
+                
+                <ul>
+                    <li><strong>Location:</strong> Unknown location</li>
+                    <li><strong>Device:</strong> Unrecognized device</li>
+                    <li><strong>Time:</strong> Just now</li>
+                    <li><strong>IP Address:</strong> 185.220.100.240</li>
+                </ul>
+
+                <p><strong>If this was you:</strong> No action needed - you can ignore this email.</p>
+                
+                <p><strong>If this wasn't you:</strong> Your account may be compromised. Please secure your account immediately by clicking the button below.</p>
+            </div>
+
+            <div style="text-align: center;">
+                <a href="{{PHISHING_URL}}" class="cta-button">
+                    🔒 Secure My Account Now
+                </a>
+            </div>
+
+            <div class="security-tips">
+                <h3 style="color: #333; margin-top: 0;">Security Tips:</h3>
+                <ul>
+                    <li>Always use two-factor authentication</li>
+                    <li>Never share your login credentials</li>
+                    <li>Use a unique, strong password</li>
+                    <li>Keep your email and phone number up to date</li>
+                </ul>
+            </div>
+
+            <p style="font-size: 14px; color: #666;">
+                For immediate assistance, please contact our support team at 
+                <a href="mailto:security@coinbase.com" style="color: #1652f0;">security@coinbase.com</a>
+            </p>
+
+            <div class="timestamp">
+                Email sent: {{TIMESTAMP}}<br>
+                Reference ID: CB-SEC-{{RANDOM_ID}}
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>This email was sent by Coinbase, Inc.<br>
+            100 Pine Street, Suite 1250, San Francisco, CA 94111</p>
+            
+            <div class="social-links">
+                <a href="#">Twitter</a> |
+                <a href="#">Blog</a> |
+                <a href="#">Support</a> |
+                <a href="#">Privacy</a>
+            </div>
+
+            <p style="margin-top: 20px; font-size: 12px;">
+                © 2024 Coinbase, Inc. All rights reserved.<br>
+                If you no longer wish to receive these emails, you can 
+                <a href="#" style="color: #1652f0;">unsubscribe here</a>.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
