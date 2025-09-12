@@ -2,6 +2,13 @@
 
 This is a phishing simulation and awareness training platform built as a full-stack web application. The system allows security professionals to create and manage phishing campaigns, send targeted emails, track user interactions, and analyze security awareness metrics. It supports multiple campaign types including Office 365, Gmail, and custom phishing scenarios with comprehensive bot detection and session tracking capabilities.
 
+**Project Status**: Successfully migrated to Replit environment (September 9, 2025)
+- ✅ Node.js dependencies installed and configured
+- ✅ PostgreSQL database set up and schema applied
+- ✅ Database connection updated from Neon serverless to standard PostgreSQL
+- ✅ Application running on port 5000 with proper security practices
+- ✅ Client/server separation verified and maintained
+
 # User Preferences
 
 Preferred communication style: Simple, everyday language.
