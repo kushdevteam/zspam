@@ -1,9 +1,13 @@
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { useToast } from "@/hooks/use-toast";
 import { apiRequest } from "@/lib/queryClient";
+import { EmailTemplateForm } from "@/components/EmailTemplateForm";
+import { SmtpServerForm } from "@/components/SmtpServerForm";
 import { 
   Plus, 
   RefreshCw, 
@@ -12,13 +16,18 @@ import {
   Zap, 
   Mail, 
   Server,
-  FileText
+  FileText,
+  Globe
 } from "lucide-react";
 import { SmtpServer, EmailTemplate } from "@shared/schema";
 
 export default function EmailSenderPage() {
   const { toast } = useToast();
   const queryClient = useQueryClient();
+  const [showSmtpForm, setShowSmtpForm] = useState(false);
+  const [showTemplateForm, setShowTemplateForm] = useState(false);
+  const [editingSmtp, setEditingSmtp] = useState<SmtpServer | null>(null);
+  const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
 
   // Fetch SMTP servers
   const { data: smtpServers = [], isLoading: smtpLoading } = useQuery<SmtpServer[]>({
@@ -152,60 +161,45 @@ export default function EmailSenderPage() {
     },
   });
 
-  // Handle add SMTP server
-  const handleAddSmtpServer = () => {
-    const name = prompt("Server Name:");
-    if (!name) return;
-    
-    const host = prompt("SMTP Host:");
-    if (!host) return;
-    
-    const portStr = prompt("SMTP Port (587 for TLS, 465 for SSL):");
-    const port = parseInt(portStr || "587");
-    if (isNaN(port)) return;
-    
-    const username = prompt("Username:");
-    if (!username) return;
-    
-    const password = prompt("Password:");
-    if (!password) return;
-    
-    const fromEmail = prompt("From Email Address:");
-    if (!fromEmail) return;
-    
-    const secure = confirm("Use SSL/TLS? (Cancel for STARTTLS)");
-    
-    createSmtpMutation.mutate({
-      name,
-      host,
-      port,
-      username,
-      password,
-      fromEmail,
-      secure
+  // Handle SMTP server submission
+  const handleSmtpSubmit = (data: any) => {
+    createSmtpMutation.mutate(data, {
+      onSuccess: () => {
+        setShowSmtpForm(false);
+        setEditingSmtp(null);
+      }
     });
   };
 
-  // Handle create template
-  const handleCreateTemplate = () => {
-    const name = prompt("Template Name:");
-    if (!name) return;
+  // Handle template submission
+  const handleTemplateSubmit = (data: any) => {
+    // TODO: Handle file uploads for attachments
+    const templateData = {
+      ...data,
+      textContent: data.textContent || data.htmlContent?.replace(/<[^>]*>/g, '') || ''
+    };
     
-    const subject = prompt("Email Subject:");
-    if (!subject) return;
-    
-    const htmlContent = prompt("HTML Content (basic HTML):");
-    if (!htmlContent) return;
-    
-    createTemplateMutation.mutate({
-      name,
-      subject,
-      htmlContent,
-      textContent: htmlContent.replace(/<[^>]*>/g, '') // Strip HTML for text version
+    createTemplateMutation.mutate(templateData, {
+      onSuccess: () => {
+        setShowTemplateForm(false);
+        setEditingTemplate(null);
+      }
     });
   };
 
-  // Handle test SMTP
+  // Handle test SMTP with form data
+  const handleTestSmtpWithData = async (data: any, testEmail: string): Promise<boolean> => {
+    try {
+      // For now, return true to indicate the form can be tested
+      // TODO: Implement actual SMTP testing with form data
+      console.log('Testing SMTP configuration:', data, 'with email:', testEmail);
+      return true;
+    } catch (error) {
+      return false;
+    }
+  };
+
+  // Handle test existing SMTP server
   const handleTestSmtp = (serverId: string) => {
     const testEmail = prompt("Enter test email address:");
     if (!testEmail) return;
@@ -230,24 +224,63 @@ export default function EmailSenderPage() {
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-foreground">Email Sender</h1>
           <div className="flex items-center space-x-3">
-            <Button 
-              className="bg-green-600 hover:bg-green-700" 
-              onClick={handleAddSmtpServer}
-              disabled={createSmtpMutation.isPending}
-              data-testid="button-add-smtp"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add SMTP Server
-            </Button>
-            <Button 
-              className="bg-blue-600 hover:bg-blue-700" 
-              onClick={handleCreateTemplate}
-              disabled={createTemplateMutation.isPending}
-              data-testid="button-create-template"
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Create Template
-            </Button>
+            <Dialog open={showSmtpForm} onOpenChange={setShowSmtpForm}>
+              <DialogTrigger asChild>
+                <Button 
+                  className="bg-green-600 hover:bg-green-700" 
+                  data-testid="button-add-smtp"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Add SMTP Server
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                <SmtpServerForm
+                  onSubmit={handleSmtpSubmit}
+                  onCancel={() => setShowSmtpForm(false)}
+                  onTest={handleTestSmtpWithData}
+                  isLoading={createSmtpMutation.isPending}
+                  initialData={editingSmtp ? {
+                    name: editingSmtp.name,
+                    host: editingSmtp.host,
+                    port: editingSmtp.port,
+                    username: editingSmtp.username,
+                    password: editingSmtp.password,
+                    fromEmail: editingSmtp.fromEmail,
+                    secure: editingSmtp.secure || false,
+                    connectionType: (editingSmtp as any).connectionType || 'external',
+                    maxEmailsPerHour: (editingSmtp as any).maxEmailsPerHour || 100
+                  } : undefined}
+                />
+              </DialogContent>
+            </Dialog>
+            <Dialog open={showTemplateForm} onOpenChange={setShowTemplateForm}>
+              <DialogTrigger asChild>
+                <Button 
+                  className="bg-blue-600 hover:bg-blue-700" 
+                  data-testid="button-create-template"
+                >
+                  <Plus className="w-4 h-4 mr-2" />
+                  Create Template
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+                <EmailTemplateForm
+                  onSubmit={handleTemplateSubmit}
+                  onCancel={() => setShowTemplateForm(false)}
+                  isLoading={createTemplateMutation.isPending}
+                  initialData={editingTemplate ? {
+                    name: editingTemplate.name,
+                    subject: editingTemplate.subject,
+                    htmlContent: editingTemplate.htmlContent,
+                    textContent: editingTemplate.textContent || undefined,
+                    campaignType: editingTemplate.campaignType || undefined,
+                    description: (editingTemplate as any).description || undefined,
+                    tags: (editingTemplate as any).tags || []
+                  } : undefined}
+                />
+              </DialogContent>
+            </Dialog>
             <Button 
               variant="default" 
               onClick={handleRefresh}
@@ -283,14 +316,22 @@ export default function EmailSenderPage() {
                 </div>
                 <h4 className="text-lg font-semibold text-foreground mb-2">No SMTP servers configured</h4>
                 <p className="text-muted-foreground mb-4">Add an SMTP server to start sending emails.</p>
-                <Button 
-                  onClick={handleAddSmtpServer}
-                  disabled={createSmtpMutation.isPending}
-                  data-testid="button-add-first-smtp"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Add SMTP Server
-                </Button>
+                <Dialog open={showSmtpForm} onOpenChange={setShowSmtpForm}>
+                  <DialogTrigger asChild>
+                    <Button data-testid="button-add-first-smtp">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Add SMTP Server
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+                    <SmtpServerForm
+                      onSubmit={handleSmtpSubmit}
+                      onCancel={() => setShowSmtpForm(false)}
+                      onTest={handleTestSmtpWithData}
+                      isLoading={createSmtpMutation.isPending}
+                    />
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
           ) : (
@@ -404,14 +445,21 @@ export default function EmailSenderPage() {
                 </div>
                 <h4 className="text-lg font-semibold text-foreground mb-2">No email templates found</h4>
                 <p className="text-muted-foreground mb-4">Create your first email template to get started with campaigns.</p>
-                <Button 
-                  onClick={handleCreateTemplate}
-                  disabled={createTemplateMutation.isPending}
-                  data-testid="button-create-first-template"
-                >
-                  <Plus className="w-4 h-4 mr-2" />
-                  Create Template
-                </Button>
+                <Dialog open={showTemplateForm} onOpenChange={setShowTemplateForm}>
+                  <DialogTrigger asChild>
+                    <Button data-testid="button-create-first-template">
+                      <Plus className="w-4 h-4 mr-2" />
+                      Create Template
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
+                    <EmailTemplateForm
+                      onSubmit={handleTemplateSubmit}
+                      onCancel={() => setShowTemplateForm(false)}
+                      isLoading={createTemplateMutation.isPending}
+                    />
+                  </DialogContent>
+                </Dialog>
               </CardContent>
             </Card>
           ) : (

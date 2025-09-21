@@ -211,9 +211,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
             password: hashedPassword,
           });
           console.log("Created admin user:", user.id);
-        } catch (createError) {
-          console.error("Error creating admin user:", createError);
-          return res.status(500).json({ message: "Failed to create admin user" });
+        } catch (createError: any) {
+          // Handle race condition where admin user was created by another request
+          if (createError.code === '23505') {
+            console.log("Admin user already exists, fetching existing user");
+            try {
+              user = await storage.getUserByUsername("admin");
+            } catch (fetchError) {
+              console.error("Error fetching existing admin user:", fetchError);
+              return res.status(500).json({ message: "Database connection error" });
+            }
+          } else {
+            console.error("Error creating admin user:", createError);
+            return res.status(500).json({ message: "Failed to create admin user" });
+          }
         }
       }
       
@@ -272,7 +283,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const campaignStats = campaigns.map(campaign => {
         const campaignSessions = sessions.filter(s => s.campaignId === campaign.id);
         const totalSessions = campaignSessions.length;
-        const completeSessions = campaignSessions.filter(s => s.credentialsCaptured).length;
+        const completeSessions = campaignSessions.filter(s => s.status === 'completed').length;
         
         return {
           id: campaign.id,
@@ -299,9 +310,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
       
       const sessionStats = {
         total: sessions.length,
-        credentialsCaptured: sessions.filter(s => s.credentialsCaptured).length,
+        credentialsCaptured: sessions.filter(s => s.status === 'completed').length,
         byTimePeriod: sessions.reduce((acc, session) => {
-          const hour = new Date(session.timestamp).getHours();
+          const sessionDate = session.createdAt ? new Date(session.createdAt) : new Date();
+          const hour = sessionDate.getHours();
           const timeSlot = `${hour.toString().padStart(2, '0')}:00`;
           acc[timeSlot] = (acc[timeSlot] || 0) + 1;
           return acc;
@@ -312,7 +324,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           return acc;
         }, {} as Record<string, number>),
         byLocation: sessions.reduce((acc, session) => {
-          const location = session.location || 'Unknown';
+          const location = session.city || 'Unknown';
           acc[location] = (acc[location] || 0) + 1;
           return acc;
         }, {} as Record<string, number>)
@@ -546,14 +558,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         const dayEnd = new Date(date.setHours(23, 59, 59, 999));
         
         const daySessions = sessions.filter(s => {
-          const sessionDate = new Date(s.createdAt);
+          const sessionDate = s.createdAt ? new Date(s.createdAt) : new Date();
           return sessionDate >= dayStart && sessionDate <= dayEnd;
         });
 
         return {
           date: dayStart.toISOString().split('T')[0],
           campaigns: filteredCampaigns.filter(c => {
-            const campaignDate = new Date(c.createdAt);
+            const campaignDate = c.createdAt ? new Date(c.createdAt) : new Date();
             return campaignDate >= dayStart && campaignDate <= dayEnd;
           }).length,
           sessions: daySessions.length,
@@ -940,7 +952,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.get("/api/smtp-servers", authenticateUser, async (req, res) => {
     try {
       const servers = await storage.getSmtpServersByUserId(req.user.id);
-      res.json(servers);
+      // Redact passwords for security
+      const safeServers = servers.map(server => {
+        const { password, ...safeServer } = server;
+        return {
+          ...safeServer,
+          hasPassword: !!password // Indicate if password is set
+        };
+      });
+      res.json(safeServers);
     } catch (error) {
       res.status(500).json({ message: "Failed to fetch SMTP servers" });
     }
@@ -956,7 +976,6 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
 
       const server = await storage.createSmtpServer({
-        id: crypto.randomUUID(),
         userId: req.user.id,
         name,
         host,
@@ -965,12 +984,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
         password,
         fromEmail,
         secure: Boolean(secure),
-        isActive: false,
-        createdAt: new Date(),
-        updatedAt: new Date()
+        isActive: false
       });
 
-      res.json(server);
+      // Redact password from response
+      const { password, ...safeServer } = server;
+      res.json({ ...safeServer, hasPassword: true });
     } catch (error) {
       console.error("Error creating SMTP server:", error);
       res.status(500).json({ error: "Failed to create SMTP server" });
@@ -992,11 +1011,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(404).json({ error: "SMTP server not found" });
       }
 
-      // In real implementation, this would create nodemailer transport and send test email
-      // For now, we'll simulate the test
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Use the actual email service to send a test email
+      let result;
+      try {
+        result = await emailService.sendTestEmail(server, testEmail);
+        console.log('SMTP test result:', result);
+      } finally {
+        // Always close the transporter to prevent connection leaks
+        emailService.close();
+      }
       
-      res.json({ success: true, message: "Test email sent successfully" });
+      if (result.success) {
+        res.json({ 
+          success: true, 
+          message: "Test email sent successfully",
+          messageId: result.messageId 
+        });
+      } else {
+        res.status(500).json({ 
+          error: result.error || "Failed to send test email",
+          success: false 
+        });
+      }
     } catch (error) {
       console.error("Error testing SMTP server:", error);
       res.status(500).json({ error: "Failed to test SMTP server" });

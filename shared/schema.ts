@@ -56,7 +56,28 @@ export const emailTemplates = pgTable("email_templates", {
   htmlContent: text("html_content").notNull(),
   textContent: text("text_content"),
   campaignType: text("campaign_type"), // 'coinbase'
+  attachments: jsonb("attachments"), // Store file paths and metadata
+  previewImage: text("preview_image"), // Store preview image path
+  tags: jsonb("tags"), // Array of tags for organization
+  description: text("description"), // Template description
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
+  userId: varchar("user_id").references(() => users.id),
+});
+
+export const domains = pgTable("domains", {
+  id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
+  domain: text("domain").notNull().unique(),
+  verified: boolean("verified").default(false),
+  verificationCode: text("verification_code"),
+  verificationMethod: text("verification_method").default('dns'), // 'dns', 'file'
+  dnsRecords: jsonb("dns_records"), // Store required DNS records
+  spfRecord: text("spf_record"),
+  dkimRecord: text("dkim_record"),
+  dmarcRecord: text("dmarc_record"),
+  isActive: boolean("is_active").default(false),
+  createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
   userId: varchar("user_id").references(() => users.id),
 });
 
@@ -68,9 +89,14 @@ export const smtpServers = pgTable("smtp_servers", {
   username: text("username").notNull(),
   password: text("password").notNull(),
   fromEmail: text("from_email").notNull(),
+  domainId: varchar("domain_id").references(() => domains.id),
   secure: boolean("secure").default(true), // SSL/TLS
+  connectionType: text("connection_type").default('external'), // 'external', 'internal'
+  maxEmailsPerHour: integer("max_emails_per_hour").default(100),
   isActive: boolean("is_active").default(false),
+  lastUsedAt: timestamp("last_used_at"),
   createdAt: timestamp("created_at").defaultNow(),
+  updatedAt: timestamp("updated_at").defaultNow(),
   userId: varchar("user_id").references(() => users.id),
 });
 
@@ -405,15 +431,24 @@ export const insertCampaignSchema = createInsertSchema(campaigns).omit({
   userId: true,
 });
 
+export const insertDomainSchema = createInsertSchema(domains).omit({
+  id: true,
+  createdAt: true,
+  updatedAt: true,
+  userId: true,
+});
+
 export const insertEmailTemplateSchema = createInsertSchema(emailTemplates).omit({
   id: true,
   createdAt: true,
+  updatedAt: true,
   userId: true,
 });
 
 export const insertSmtpServerSchema = createInsertSchema(smtpServers).omit({
   id: true,
   createdAt: true,
+  updatedAt: true,
   userId: true,
 });
 
@@ -444,6 +479,8 @@ export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
 export type Campaign = typeof campaigns.$inferSelect;
 export type InsertCampaign = z.infer<typeof insertCampaignSchema>;
+export type Domain = typeof domains.$inferSelect;
+export type InsertDomain = z.infer<typeof insertDomainSchema>;
 export type EmailTemplate = typeof emailTemplates.$inferSelect;
 export type InsertEmailTemplate = z.infer<typeof insertEmailTemplateSchema>;
 export type SmtpServer = typeof smtpServers.$inferSelect;

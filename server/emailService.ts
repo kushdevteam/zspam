@@ -168,7 +168,7 @@ export class EmailService {
       text: 'SMTP configuration test successful',
     };
 
-    return await this.sendEmail(testEmail, smtpServer.username, testContent);
+    return await this.sendEmail(testEmail, smtpServer.fromEmail, testContent);
   }
 
   async personalizeEmailContent(
