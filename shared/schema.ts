@@ -19,7 +19,7 @@ export const users = pgTable("users", {
 export const campaigns = pgTable("campaigns", {
   id: varchar("id").primaryKey().default(sql`gen_random_uuid()`),
   name: text("name").notNull(),
-  type: text("type").notNull(), // 'office365', 'gmail', 'custom', 'barclays', 'hsbc', 'lloyds', 'natwest', 'santander'
+  type: text("type").notNull(), // 'coinbase'
   domain: text("domain"),
   redirectUrl: text("redirect_url"),
   customPath: text("custom_path"),
@@ -55,7 +55,7 @@ export const emailTemplates = pgTable("email_templates", {
   subject: text("subject").notNull(),
   htmlContent: text("html_content").notNull(),
   textContent: text("text_content"),
-  campaignType: text("campaign_type"), // 'office365', 'gmail', 'custom'
+  campaignType: text("campaign_type"), // 'coinbase'
   createdAt: timestamp("created_at").defaultNow(),
   userId: varchar("user_id").references(() => users.id),
 });

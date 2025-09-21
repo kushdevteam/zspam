@@ -138,14 +138,14 @@ const mockThreatIndicators: ThreatIndicator[] = [
   {
     id: "2",
     type: "url",
-    value: "https://office365-security.com/verify",
+    value: "https://coinbase-security.com/verify",
     severity: "critical",
     confidence: 0.95,
     source: "US-CERT",
     firstSeen: "2024-01-16T08:15:00Z",
     lastSeen: "2024-01-16T13:45:00Z",
-    tags: ["office365", "credential-phishing", "business-email-compromise"],
-    description: "Phishing page mimicking Office 365 login with advanced evasion techniques"
+    tags: ["coinbase", "credential-phishing", "crypto-exchange"],
+    description: "Phishing page mimicking Coinbase login with advanced evasion techniques"
   },
   {
     id: "3",

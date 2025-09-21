@@ -189,9 +189,7 @@ export default function SessionsPage() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Platforms</SelectItem>
-                    <SelectItem value="office365">Office 365</SelectItem>
-                    <SelectItem value="gmail">Gmail</SelectItem>
-                    <SelectItem value="custom">Custom</SelectItem>
+                    <SelectItem value="coinbase">Coinbase</SelectItem>
                   </SelectContent>
                 </Select>
               </div>

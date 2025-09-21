@@ -129,25 +129,25 @@ const mockRules: PersonalizationRule[] = [
   },
   {
     id: "2",
-    name: "IT Department O365",
-    description: "Technical Office365 security alerts for IT professionals",
+    name: "Crypto Traders Coinbase",
+    description: "Technical Coinbase security alerts for crypto traders",
     targetAudience: {
-      department: "Information Technology",
+      department: "Finance/Trading",
       role: "Technical",
       seniority: "Mid-Senior"
     },
     personalization: {
-      subjectLine: "Microsoft 365 Security Alert: {{threat_type}} detected",
-      senderName: "Microsoft Security Center",
-      senderEmail: "security@microsoftonline.com",
+      subjectLine: "Coinbase Security Alert: {{threat_type}} detected",
+      senderName: "Coinbase Security Team",
+      senderEmail: "security@coinbase.com",
       urgencyLevel: "medium"
     },
     template: {
-      templateId: "o365-technical",
+      templateId: "coinbase-technical",
       customizations: {
         technical_details: "enhanced",
         action_buttons: "multiple",
-        branding: "microsoft"
+        branding: "coinbase"
       }
     },
     isActive: true,

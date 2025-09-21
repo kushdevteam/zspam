@@ -41,23 +41,21 @@ export default function StatisticsPage() {
   ];
 
   const campaignTypes = [
-    { name: "Office 365", count: 7, percentage: 58.3, color: "bg-red-500" },
-    { name: "Gmail", count: 4, percentage: 33.3, color: "bg-blue-500" },
-    { name: "Custom", count: 1, percentage: 8.3, color: "bg-green-500" },
+    { name: "Coinbase", count: 12, percentage: 100, color: "bg-blue-500" },
   ];
 
   const recentActivity = [
     {
       type: "success",
-      title: "Office 365 Campaign completed successfully",
-      description: "Captured 12 credentials from 18 targets • 2 hours ago",
-      status: "67% Success",
+      title: "Coinbase Campaign completed successfully",
+      description: "Captured 18 credentials from 25 targets • 2 hours ago",
+      status: "72% Success",
       statusColor: "text-green-400",
     },
     {
       type: "info",
-      title: "Gmail Campaign started",
-      description: "Sending emails to 25 targets • 4 hours ago",
+      title: "Coinbase Security Alert Campaign started",
+      description: "Sending security alerts to 35 targets • 4 hours ago",
       status: "In Progress",
       statusColor: "text-blue-400",
     },

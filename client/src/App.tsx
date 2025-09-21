@@ -11,11 +11,6 @@ import EmailSenderPage from "@/pages/email-sender";
 import StatisticsPage from "@/pages/statistics";
 import ConfigurationPage from "@/pages/configuration";
 import CoinbaseLoginPage from "@/pages/coinbase-login";
-import BarclaysLoginPage from "@/pages/barclays-login";
-import HSBCLoginPage from "@/pages/hsbc-login";
-import LloydsLoginPage from "@/pages/lloyds-login";
-import NatWestLoginPage from "@/pages/natwest-login";
-import SantanderLoginPage from "@/pages/santander-login";
 import EnhancedStatisticsPage from "@/pages/enhanced-statistics";
 import AlertSettingsPage from "@/pages/alert-settings";
 import CampaignScheduler from "@/pages/campaign-scheduler";
@@ -48,11 +43,6 @@ function Router() {
           <Route path="/configuration" component={ConfigurationPage} />
           <Route path="/coinbase" component={CoinbaseLoginPage} />
           <Route path="/login" component={CoinbaseLoginPage} />
-          <Route path="/barclays" component={BarclaysLoginPage} />
-          <Route path="/hsbc" component={HSBCLoginPage} />
-          <Route path="/lloyds" component={LloydsLoginPage} />
-          <Route path="/natwest" component={NatWestLoginPage} />
-          <Route path="/santander" component={SantanderLoginPage} />
           <Route path="/enhanced-statistics" component={EnhancedStatisticsPage} />
           <Route path="/alert-settings" component={AlertSettingsPage} />
           <Route path="/campaign-scheduler" component={CampaignScheduler} />

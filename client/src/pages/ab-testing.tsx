@@ -176,8 +176,8 @@ const mockABTests: ABTest[] = [
   },
   {
     id: "3",
-    name: "Office365 Timing Test",
-    description: "Testing optimal sending times for Office365 phishing campaigns",
+    name: "Coinbase Timing Test",
+    description: "Testing optimal sending times for Coinbase phishing campaigns",
     hypothesis: "Emails sent on Tuesday mornings will have 20% higher engagement",
     status: "draft",
     trafficSplit: 40,
@@ -186,8 +186,8 @@ const mockABTests: ABTest[] = [
       {
         id: "var1",
         name: "Tuesday 9 AM (Control)",
-        subjectLine: "Microsoft 365 - Account Security Alert",
-        templateId: "o365-standard",
+        subjectLine: "Coinbase - Account Security Alert",
+        templateId: "coinbase-standard",
         description: "Standard Tuesday morning delivery",
         participants: 0,
         conversions: 0,
@@ -197,8 +197,8 @@ const mockABTests: ABTest[] = [
       {
         id: "var2",
         name: "Thursday 2 PM",
-        subjectLine: "Microsoft 365 - Account Security Alert",
-        templateId: "o365-standard",
+        subjectLine: "Coinbase - Account Security Alert",
+        templateId: "coinbase-standard",
         description: "Thursday afternoon delivery",
         participants: 0,
         conversions: 0,
@@ -475,10 +475,10 @@ export default function ABTesting() {
                                 <SelectValue placeholder="Select template" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="barclays-standard">Barclays Standard</SelectItem>
-                                <SelectItem value="barclays-urgent">Barclays Urgent</SelectItem>
-                                <SelectItem value="hsbc-corporate">HSBC Corporate</SelectItem>
-                                <SelectItem value="o365-standard">Office365 Standard</SelectItem>
+                                <SelectItem value="coinbase-security">Coinbase Security Alert</SelectItem>
+                                <SelectItem value="coinbase-suspension">Coinbase Account Suspension</SelectItem>
+                                <SelectItem value="coinbase-earn">Coinbase Earn Opportunity</SelectItem>
+                                <SelectItem value="coinbase-standard">Coinbase Standard</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>

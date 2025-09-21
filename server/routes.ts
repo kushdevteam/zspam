@@ -394,15 +394,15 @@ export async function registerRoutes(app: Express): Promise<Server> {
           description: "Test complete campaign creation with all template types",
           tests: [
             { 
-              name: "Create Office365 Campaign", 
-              status: campaigns.some(c => c.type === 'office365') ? 'pass' : 'warning', 
-              message: campaigns.some(c => c.type === 'office365') ? "Office365 campaign exists" : "No Office365 campaigns found", 
+              name: "Create Coinbase Campaign", 
+              status: campaigns.some(c => c.type === 'coinbase') ? 'pass' : 'warning', 
+              message: campaigns.some(c => c.type === 'coinbase') ? "Coinbase campaign exists" : "No Coinbase campaigns found", 
               duration: 1.2 
             },
             { 
-              name: "Create UK Banking Campaign", 
-              status: campaigns.some(c => ['barclays', 'hsbc', 'lloyds', 'natwest', 'santander'].includes(c.type)) ? 'pass' : 'warning', 
-              message: campaigns.some(c => ['barclays', 'hsbc', 'lloyds', 'natwest', 'santander'].includes(c.type)) ? "Banking template configured" : "No banking campaigns found", 
+              name: "Create Coinbase Security Alert", 
+              status: campaigns.some(c => c.type === 'coinbase') ? 'pass' : 'warning', 
+              message: campaigns.some(c => c.type === 'coinbase') ? "Coinbase security template configured" : "No Coinbase campaigns found", 
               duration: 0.8 
             },
             { 

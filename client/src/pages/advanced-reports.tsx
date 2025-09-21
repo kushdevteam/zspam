@@ -44,11 +44,10 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884D8'];
 
 // Mock data for reports
 const campaignPerformanceData = [
-  { name: 'Office365', sent: 450, opened: 380, clicked: 125, submitted: 45 },
-  { name: 'Barclays', sent: 320, opened: 295, clicked: 180, submitted: 78 },
-  { name: 'HSBC', sent: 280, opened: 240, clicked: 150, submitted: 62 },
-  { name: 'Gmail', sent: 510, opened: 420, clicked: 95, submitted: 32 },
-  { name: 'Coinbase', sent: 190, opened: 165, clicked: 88, submitted: 41 },
+  { name: 'Coinbase Security Alert', sent: 450, opened: 380, clicked: 125, submitted: 45 },
+  { name: 'Coinbase Account Suspension', sent: 320, opened: 295, clicked: 180, submitted: 78 },
+  { name: 'Coinbase Earn Opportunity', sent: 280, opened: 240, clicked: 150, submitted: 62 },
+  { name: 'Coinbase Pro Upgrade', sent: 190, opened: 165, clicked: 88, submitted: 41 },
 ];
 
 const timeSeriesData = [
